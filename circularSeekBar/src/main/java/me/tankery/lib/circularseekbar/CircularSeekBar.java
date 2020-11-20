@@ -77,6 +77,7 @@ public class CircularSeekBar extends View {
     private static final float DEFAULT_START_ANGLE = 270f; // Geometric (clockwise, relative to 3 o'clock)
     private static final float DEFAULT_END_ANGLE = 270f; // Geometric (clockwise, relative to 3 o'clock)
     private static final float DEFAULT_POINTER_ANGLE = 0;
+    private static final boolean DEFAULT_ALWAYS_SHOW_HALO = true;
     private static final int DEFAULT_MAX = 100;
     private static final int DEFAULT_PROGRESS = 0;
     private static final int DEFAULT_CIRCLE_COLOR = Color.DKGRAY;
@@ -342,6 +343,11 @@ public class CircularSeekBar extends View {
     private boolean mUserIsMovingPointer = false;
 
     /**
+     * flag to show holo always irrespective of touch
+     */
+    private boolean mAlwaysDrawHalo = true;
+
+    /**
      * The width of the circle used in the {@code RectF} that is used to draw it.
      * Based on either the View width or the custom X radius.
      */
@@ -381,6 +387,7 @@ public class CircularSeekBar extends View {
         mPointerHaloWidth = attrArray.getDimension(R.styleable.cs_CircularSeekBar_cs_pointer_halo_width, DEFAULT_POINTER_HALO_WIDTH);
         mPointerHaloBorderWidth = attrArray.getDimension(R.styleable.cs_CircularSeekBar_cs_pointer_halo_border_width, DEFAULT_POINTER_HALO_BORDER_WIDTH);
         mCircleStrokeWidth = attrArray.getDimension(R.styleable.cs_CircularSeekBar_cs_circle_stroke_width, DEFAULT_CIRCLE_STROKE_WIDTH);
+        mAlwaysDrawHalo = attrArray.getBoolean(R.styleable.cs_CircularSeekBar_cs_always_show_halo, DEFAULT_ALWAYS_SHOW_HALO);
 
         int circleStyle = attrArray.getInt(R.styleable.cs_CircularSeekBar_cs_circle_style, DEFAULT_CIRCLE_STYLE);
         mCircleStyle = Paint.Cap.values()[circleStyle];
@@ -614,7 +621,7 @@ public class CircularSeekBar extends View {
         }
 
         if (!mDisablePointer) {
-            if (mUserIsMovingPointer) {
+            if (mUserIsMovingPointer || mAlwaysDrawHalo) {
                 canvas.drawPath(mCirclePonterPath, mPointerHaloPaint);
             }
             canvas.drawPath(mCirclePonterPath, mPointerPaint);
